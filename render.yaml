@@ -1,0 +1,8 @@
+
+services:
+  - type: web
+    name: meer-ai-freelance
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
