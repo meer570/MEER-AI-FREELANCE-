@@ -2,179 +2,385 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meer AI Freelance Agent</title>
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 24px;
-      font-family: Arial, sans-serif;
-      background: #101827;
-      color: #f3f4f6;
-    }
-
-    main {
-      max-width: 760px;
-      margin: 30px auto;
-    }
-
-    h1 { margin-bottom: 8px; }
-
-    .muted { color: #aab5c5; }
-
-    .panel {
-      margin-top: 24px;
-      padding: 22px;
-      border: 1px solid #344256;
-      border-radius: 14px;
-      background: #192437;
-    }
-
-    label {
-      display: block;
-      margin: 18px 0 8px;
-      font-weight: bold;
-    }
-
-    select, textarea, button {
-      width: 100%;
-      padding: 13px;
-      border-radius: 8px;
-      font: inherit;
-    }
-
-    select, textarea {
-      border: 1px solid #526078;
-      background: #101827;
-      color: white;
-    }
-
-    textarea {
-      min-height: 140px;
-      resize: vertical;
-    }
-
-    button {
-      margin-top: 16px;
-      border: 0;
-      background: #60a5fa;
-      color: #101827;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:disabled { opacity: 0.6; }
-
-    pre {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    #status { margin-top: 16px; }
-
-    @media (max-width: 500px) {
-      body { padding: 14px; }
-      main { margin-top: 10px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05090f">
+<title>MEER AI | Command Center</title>
+<style>
+:root {
+  --bg:#05090f;
+  --panel:#0a1420;
+  --cyan:#26e6ff;
+  --green:#54ff9b;
+  --muted:#8295a8;
+  --line:rgba(38,230,255,.19);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:
+  radial-gradient(ellipse at 50% 0%,#102638 0%,transparent 45%),
+  var(--bg);color:#e8faff;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  min-height:100vh;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:1400px;margin:auto;padding:18px}
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;flex-wrap:wrap;padding:15px 0;
+  border-bottom:1px solid var(--line)
+}
+.brand{font-size:21px;font-weight:900;letter-spacing:3px}
+.brand span{color:var(--cyan);text-shadow:0 0 15px var(--cyan)}
+.sub{font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:2px}
+.pill{font-size:11px;color:var(--green);border:1px solid #235d49;
+padding:9px 12px;border-radius:20px}
+.layout{display:grid;grid-template-columns:205px 1fr;gap:18px;margin-top:20px}
+.panel{background:linear-gradient(145deg,rgba(12,27,41,.94),rgba(5,13,22,.96));
+border:1px solid var(--line);border-radius:13px;padding:17px;
+box-shadow:0 0 22px rgba(38,230,255,.035)}
+nav{display:flex;flex-direction:column;gap:8px}
+.navbtn{background:transparent;color:#91a7b9;border:1px solid transparent;
+padding:13px;text-align:left;border-radius:8px}
+.navbtn:hover,.navbtn.active{color:var(--cyan);border-color:var(--line);
+background:rgba(38,230,255,.07)}
+.navtitle,.label{font-size:10px;letter-spacing:2px;color:var(--muted)}
+.navtitle{padding:7px 12px}
+.core-panel{text-align:center;overflow:hidden}
+.core{
+  width:155px;height:155px;border-radius:50%;margin:12px auto 18px;
+  display:grid;place-items:center;position:relative;
+  border:1px solid var(--cyan);
+  box-shadow:0 0 18px #26e6ff66,inset 0 0 25px #26e6ff20;
+  animation:pulse 3s infinite ease-in-out;
+}
+.core:before,.core:after{
+ content:"";position:absolute;inset:9px;border:1px dashed var(--cyan);
+ border-radius:50%;animation:spin 14s linear infinite
+}
+.core:after{inset:22px;border-style:solid;border-color:#54ff9b88;
+animation-direction:reverse;animation-duration:9s}
+.core b{font-size:27px;color:var(--cyan);text-shadow:0 0 20px var(--cyan)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{50%{box-shadow:0 0 32px #26e6ff77,inset 0 0 30px #26e6ff25}}
+h1{font-size:clamp(19px,3vw,28px);letter-spacing:2px;margin:12px 0}
+h2{font-size:13px;letter-spacing:2px;margin:0 0 15px;color:var(--cyan)}
+.muted{color:var(--muted);font-size:12px;line-height:1.7}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:17px}
+.stat{border:1px solid var(--line);padding:13px;border-radius:9px;text-align:left}
+.stat strong{display:block;font-size:20px;color:var(--green);margin-top:8px}
+.columns{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-top:16px}
+label{display:block;color:#9cb4c6;font-size:11px;margin:15px 0 8px}
+select,textarea,input{
+ width:100%;background:#050c14;color:#e8faff;border:1px solid #254458;
+ border-radius:8px;padding:12px;outline:none
+}
+select:focus,textarea:focus,input:focus{border-color:var(--cyan)}
+textarea{min-height:120px;resize:vertical;line-height:1.6}
+.btn{background:linear-gradient(90deg,#26e6ff,#54ff9b);color:#031016;
+border:0;border-radius:7px;padding:13px 16px;font-weight:900;width:100%;
+margin-top:13px;letter-spacing:1px}
+.btn:disabled{opacity:.5;cursor:wait}
+.btn.secondary{background:transparent;border:1px solid var(--line);
+color:var(--cyan);width:auto;margin:0;padding:8px 10px}
+.output{background:#03080d;border:1px solid #173346;border-radius:8px;
+padding:12px;min-height:90px;white-space:pre-wrap;overflow-wrap:anywhere;
+font-size:12px;color:var(--green);line-height:1.7}
+.log{font-size:11px;color:#9ab0bf;line-height:1.9;overflow-wrap:anywhere}
+.log span{color:var(--green)}
+.history-item{border-bottom:1px solid #183040;padding:10px 0;font-size:11px;
+line-height:1.7;overflow-wrap:anywhere}
+.section{display:none}.section.active{display:block}
+footer{text-align:center;color:#536d80;font-size:10px;padding:25px 0;letter-spacing:1px}
+@media(max-width:760px){
+ .app{padding:12px}
+ .layout{grid-template-columns:1fr}
+ nav{display:grid;grid-template-columns:1fr 1fr}
+ .navtitle{grid-column:1/-1}
+ .columns{grid-template-columns:1fr}
+ .stats{grid-template-columns:1fr 1fr}
+ .brand{font-size:18px}
+ .core{width:135px;height:135px}
+}
+</style>
 </head>
 <body>
+<div class="app">
+<header>
+  <div>
+    <div class="brand"><span>◉</span> MEER AI</div>
+    <div class="sub">AUTONOMOUS FREELANCE COMMAND CENTER</div>
+  </div>
+  <div class="pill" id="systemStatus">● CONNECTING...</div>
+</header>
+
+<div class="layout">
+  <aside class="panel">
+    <div class="navtitle">MAIN SYSTEM</div>
+    <nav>
+      <button class="navbtn active" data-page="command">◈ Command Center</button>
+      <button class="navbtn" data-page="projects">▣ My Projects</button>
+      <button class="navbtn" data-page="history">◷ Task History</button>
+      <button class="navbtn" data-page="logs">⌘ System Logs</button>
+    </nav>
+    <div style="margin-top:25px" class="label">AGENT PROFILE</div>
+    <p style="font-size:12px">MEER_CORE_v1.0</p>
+    <p class="muted">Interface: Online<br>Task engine: API mode</p>
+  </aside>
+
   <main>
-    <h1>Meer AI Freelance Agent</h1>
-    <p class="muted">
-      Your workspace for freelance tasks and content planning.
-    </p>
+    <section id="command" class="section active">
+      <div class="panel core-panel">
+        <div class="label">ARTIFICIAL INTELLIGENCE CORE</div>
+        <div class="core"><b>MEER</b></div>
+        <h1>YOUR MISSION. MY CONSOLE.</h1>
+        <div class="muted" id="coreStatus">Awaiting your command...</div>
+      </div>
 
-    <section class="panel">
-      <h2>Create a task</h2>
+      <div class="stats">
+        <div class="stat"><span class="label">API STATUS</span><strong id="apiStat">CHECKING</strong></div>
+        <div class="stat"><span class="label">TASKS SAVED</span><strong id="taskCount">0</strong></div>
+        <div class="stat"><span class="label">CORE STATUS</span><strong>READY</strong></div>
+      </div>
 
-      <form id="taskForm">
-        <label for="task">Select task</label>
-        <select id="task" required>
-          <option value="freelance-proposal">Freelance Proposal</option>
-          <option value="client-reply">Client Reply</option>
-          <option value="website-plan">Website Project Plan</option>
-          <option value="coding-task">Coding Task</option>
-          <option value="youtube-script">YouTube Script</option>
-        </select>
+      <div class="columns">
+        <div class="panel">
+          <h2>⌘ COMMAND CONSOLE</h2>
+          <form id="taskForm">
+            <label for="task">SELECT MISSION</label>
+            <select id="task" required>
+              <option value="freelance-proposal">Generate Freelance Proposal</option>
+              <option value="client-reply">Write Client Reply</option>
+              <option value="website-plan">Create Website Plan</option>
+              <option value="coding-task">Coding Task</option>
+              <option value="youtube-script">YouTube Script</option>
+            </select>
+            <label for="brief">MISSION DETAILS</label>
+            <textarea id="brief" required placeholder="Describe your task, requirements, budget or idea..."></textarea>
+            <button class="btn" id="submitBtn" type="submit">▶ EXECUTE COMMAND</button>
+          </form>
+          <p class="muted" id="formStatus">Ready to receive your mission.</p>
+          <label>MISSION OUTPUT</label>
+          <div class="output" id="result">Waiting for your first command...</div>
+        </div>
 
-        <label for="brief">Task details</label>
-        <textarea
-          id="brief"
-          placeholder="Explain what you want the agent to do..."
-          required
-        ></textarea>
-
-        <button id="submitBtn" type="submit">Send Task</button>
-      </form>
-
-      <p id="status" role="status">Checking server...</p>
+        <div class="panel">
+          <h2>▤ LIVE SYSTEM LOG</h2>
+          <div class="log" id="liveLog">
+            <div><span>[BOOT]</span> MEER interface loaded</div>
+            <div><span>[UI]</span> Command console ready</div>
+            <div><span>[WAIT]</span> Checking server connection...</div>
+          </div>
+          <label>QUICK NOTE / PROJECT IDEA</label>
+          <textarea id="projectNote" placeholder="Write a project idea to save on this device..." style="min-height:80px"></textarea>
+          <button class="btn" id="saveNote" type="button">＋ SAVE PROJECT NOTE</button>
+          <p class="muted">Notes are saved in this browser on this device.</p>
+        </div>
+      </div>
     </section>
 
-    <section class="panel">
-      <h2>Task result</h2>
-      <pre id="result">Your task result will appear here.</pre>
+    <section id="projects" class="section panel">
+      <h2>▣ MY PROJECTS</h2>
+      <p class="muted">Saved project notes on this device.</p>
+      <div id="projectList" class="output">No project notes saved yet.</div>
     </section>
 
-    <p class="muted">
-      Review generated work before sending it to clients or publishing.
-    </p>
+    <section id="history" class="section panel">
+      <h2>◷ TASK HISTORY</h2>
+      <p class="muted">Recent tasks submitted from this browser.</p>
+      <button class="btn secondary" id="clearHistory" type="button">Clear history</button>
+      <div id="historyList"></div>
+    </section>
+
+    <section id="logs" class="section panel">
+      <h2>⌘ SYSTEM LOGS</h2>
+      <div id="allLogs" class="output">System initializing...</div>
+    </section>
   </main>
+</div>
+<footer>MEER AI • COMMAND INTERFACE • BUILT FOR YOUR WORKFLOW</footer>
+</div>
 
-  <script>
-    const statusBox = document.getElementById("status");
-    const resultBox = document.getElementById("result");
-    const form = document.getElementById("taskForm");
-    const submitBtn = document.getElementById("submitBtn");
+<script>
+const $ = id => document.getElementById(id);
+const safeRead = (key, fallback) => {
+  try { return JSON.parse(localStorage.getItem(key)) || fallback; }
+  catch { return fallback; }
+};
+let historyItems = safeRead("meer_history", []);
+let projects = safeRead("meer_projects", []);
+let logs = ["[BOOT] MEER interface loaded"];
+let busy = false;
 
-    async function checkServer() {
-      try {
-        const response = await fetch("/api/health");
-        const data = await response.json();
+function addLog(message) {
+  const stamp = new Date().toLocaleTimeString();
+  logs.unshift("[" + stamp + "] " + message);
+  logs = logs.slice(0, 60);
+  $("liveLog").innerHTML = logs.slice(0, 8)
+    .map(line => "<div></div>").join("");
+  $("liveLog").replaceChildren();
+  logs.slice(0, 8).forEach(line => {
+    const div = document.createElement("div");
+    div.textContent = line;
+    $("liveLog").appendChild(div);
+  });
+  $("allLogs").textContent = logs.join("\n");
+}
 
-        statusBox.textContent = data.success
-          ? "Server connected: " + data.agent
-          : "Server check failed.";
-      } catch {
-        statusBox.textContent =
-          "Server not reachable. Start the app to use tasks.";
-      }
+function renderHistory() {
+  $("taskCount").textContent = historyItems.length;
+  const list = $("historyList");
+  list.replaceChildren();
+  if (!historyItems.length) {
+    list.textContent = "No tasks submitted yet.";
+    return;
+  }
+  historyItems.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.textContent = item.time + " | " + item.task + "\n" + item.brief;
+    list.appendChild(div);
+  });
+}
+
+function renderProjects() {
+  const list = $("projectList");
+  list.replaceChildren();
+  if (!projects.length) {
+    list.textContent = "No project notes saved yet.";
+    return;
+  }
+  projects.forEach((note, index) => {
+    const row = document.createElement("div");
+    row.className = "history-item";
+    const text = document.createElement("div");
+    text.textContent = (index + 1) + ". " + note.text;
+    const del = document.createElement("button");
+    del.className = "btn secondary";
+    del.style.marginTop = "8px";
+    del.textContent = "Delete note";
+    del.addEventListener("click", () => {
+      projects.splice(index, 1);
+      localStorage.setItem("meer_projects", JSON.stringify(projects));
+      renderProjects();
+      addLog("Project note deleted");
+    });
+    row.append(text, del);
+    list.appendChild(row);
+  });
+}
+
+document.querySelectorAll(".navbtn").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".navbtn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    button.classList.add("active");
+    $(button.dataset.page).classList.add("active");
+    if (button.dataset.page === "history") renderHistory();
+    if (button.dataset.page === "projects") renderProjects();
+  });
+});
+
+async function checkHealth() {
+  try {
+    const response = await fetch("/api/health");
+    if (!response.ok) throw new Error("Server returned " + response.status);
+    const data = await response.json();
+    $("systemStatus").textContent = "● SYSTEM ONLINE";
+    $("apiStat").textContent = "ONLINE";
+    $("apiStat").style.color = "var(--green)";
+    $("coreStatus").textContent = data.message || "Server connected.";
+    addLog("API health check successful");
+  } catch (error) {
+    $("systemStatus").textContent = "● SERVER OFFLINE";
+    $("apiStat").textContent = "OFFLINE";
+    $("apiStat").style.color = "#ff8585";
+    $("coreStatus").textContent = "Open the running app server to submit tasks.";
+    addLog("API connection failed");
+  }
+}
+
+$("taskForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  if (busy) return;
+  const task = $("task").value;
+  const brief = $("brief").value.trim();
+  if (!brief) {
+    $("formStatus").textContent = "Please enter your mission details.";
+    return;
+  }
+
+  busy = true;
+  $("submitBtn").disabled = true;
+  $("submitBtn").textContent = "⟳ SENDING...";
+  $("coreStatus").textContent = "Command is being transmitted...";
+  $("formStatus").textContent = "Contacting your server...";
+  $("result").textContent = "Sending mission to MEER server...";
+  addLog("Submitting mission: " + task);
+
+  try {
+    const response = await fetch("/api/task", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({task, brief})
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Task request failed.");
     }
 
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    $("result").textContent =
+      "STATUS: " + data.status + "\n" +
+      "MISSION: " + data.task + "\n\n" +
+      (data.message || "Task received by server.");
+    $("formStatus").textContent = "Mission received by server.";
+    $("coreStatus").textContent = "Command received successfully.";
 
-      submitBtn.disabled = true;
-      statusBox.textContent = "Sending task...";
-      resultBox.textContent = "";
-
-      try {
-        const response = await fetch("/api/task", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            task: document.getElementById("task").value,
-            brief: document.getElementById("brief").value
-          })
-        });
-
-        const data = await response.json();
-        resultBox.textContent = JSON.stringify(data, null, 2);
-        statusBox.textContent = response.ok
-          ? "Task received successfully."
-          : "Could not submit task.";
-      } catch {
-        statusBox.textContent =
-          "Could not connect. Check that the server is running.";
-      } finally {
-        submitBtn.disabled = false;
-      }
+    historyItems.unshift({
+      task, brief, time: new Date().toLocaleString()
     });
+    historyItems = historyItems.slice(0, 30);
+    localStorage.setItem("meer_history", JSON.stringify(historyItems));
+    renderHistory();
+    addLog("Server accepted mission: " + task);
+  } catch (error) {
+    $("result").textContent = "ERROR: " + error.message +
+      "\n\nCheck that your app server is running.";
+    $("formStatus").textContent = "Mission could not be confirmed.";
+    $("coreStatus").textContent = "Connection needs attention.";
+    addLog("Task request failed: " + error.message);
+  } finally {
+    busy = false;
+    $("submitBtn").disabled = false;
+    $("submitBtn").textContent = "▶ EXECUTE COMMAND";
+  }
+});
 
-    checkServer();
-  </script>
+$("saveNote").addEventListener("click", () => {
+  const text = $("projectNote").value.trim();
+  if (!text) {
+    $("formStatus").textContent = "Write a project note first.";
+    return;
+  }
+  projects.unshift({text, time: new Date().toLocaleString()});
+  localStorage.setItem("meer_projects", JSON.stringify(projects));
+  $("projectNote").value = "";
+  renderProjects();
+  addLog("Project note saved locally");
+  $("formStatus").textContent = "Project note saved on this device.";
+});
+
+$("clearHistory").addEventListener("click", () => {
+  historyItems = [];
+  localStorage.setItem("meer_history", JSON.stringify(historyItems));
+  renderHistory();
+  addLog("Task history cleared");
+});
+
+renderHistory();
+renderProjects();
+checkHealth();
+</script>
 </body>
 </html>
