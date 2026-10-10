@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meer AI Freelance Agent</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      background: #101827;
+      color: #f3f4f6;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 30px auto;
+    }
+
+    h1 { margin-bottom: 8px; }
+
+    .muted { color: #aab5c5; }
+
+    .panel {
+      margin-top: 24px;
+      padding: 22px;
+      border: 1px solid #344256;
+      border-radius: 14px;
+      background: #192437;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      font-weight: bold;
+    }
+
+    select, textarea, button {
+      width: 100%;
+      padding: 13px;
+      border-radius: 8px;
+      font: inherit;
+    }
+
+    select, textarea {
+      border: 1px solid #526078;
+      background: #101827;
+      color: white;
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 16px;
+      border: 0;
+      background: #60a5fa;
+      color: #101827;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: 0.6; }
+
+    pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    #status { margin-top: 16px; }
+
+    @media (max-width: 500px) {
+      body { padding: 14px; }
+      main { margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Meer AI Freelance Agent</h1>
+    <p class="muted">
+      Your workspace for freelance tasks and content planning.
+    </p>
+
+    <section class="panel">
+      <h2>Create a task</h2>
+
+      <form id="taskForm">
+        <label for="task">Select task</label>
+        <select id="task" required>
+          <option value="freelance-proposal">Freelance Proposal</option>
+          <option value="client-reply">Client Reply</option>
+          <option value="website-plan">Website Project Plan</option>
+          <option value="coding-task">Coding Task</option>
+          <option value="youtube-script">YouTube Script</option>
+        </select>
+
+        <label for="brief">Task details</label>
+        <textarea
+          id="brief"
+          placeholder="Explain what you want the agent to do..."
+          required
+        ></textarea>
+
+        <button id="submitBtn" type="submit">Send Task</button>
+      </form>
+
+      <p id="status" role="status">Checking server...</p>
+    </section>
+
+    <section class="panel">
+      <h2>Task result</h2>
+      <pre id="result">Your task result will appear here.</pre>
+    </section>
+
+    <p class="muted">
+      Review generated work before sending it to clients or publishing.
+    </p>
+  </main>
+
+  <script>
+    const statusBox = document.getElementById("status");
+    const resultBox = document.getElementById("result");
+    const form = document.getElementById("taskForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    async function checkServer() {
+      try {
+        const response = await fetch("/api/health");
+        const data = await response.json();
+
+        statusBox.textContent = data.success
+          ? "Server connected: " + data.agent
+          : "Server check failed.";
+      } catch {
+        statusBox.textContent =
+          "Server not reachable. Start the app to use tasks.";
+      }
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      submitBtn.disabled = true;
+      statusBox.textContent = "Sending task...";
+      resultBox.textContent = "";
+
+      try {
+        const response = await fetch("/api/task", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            task: document.getElementById("task").value,
+            brief: document.getElementById("brief").value
+          })
+        });
+
+        const data = await response.json();
+        resultBox.textContent = JSON.stringify(data, null, 2);
+        statusBox.textContent = response.ok
+          ? "Task received successfully."
+          : "Could not submit task.";
+      } catch {
+        statusBox.textContent =
+          "Could not connect. Check that the server is running.";
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    checkServer();
+  </script>
+</body>
+</html>
